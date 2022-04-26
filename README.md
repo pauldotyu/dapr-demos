@@ -12,7 +12,7 @@ This is my repo for learning and demo'ing dapr
 
 This repo includes a few services as demonstrated in the book [Introducing Distributed Application Runtime (Dapr): Simplifying Microservices Applications Development Through Proven and Reusable Patterns and Practices](https://www.amazon.com/Introducing-Distributed-Application-Runtime-Dapr/dp/1484269977)
 
-Code Samples: https://github.com/Apress/introducing-dapr
+Code samples are found [here](https://github.com/Apress/introducing-dapr)
 
 ### hello-service
 
@@ -98,4 +98,43 @@ To run dapr, run this command:
 
 ```bash
 dapr run --app-id world-service --app-port 8089 -- node app.js
+```
+
+### greeting-service
+
+This service uses Dapr to invoke both the `hello-service` and `world-service` services and concatenates the results of each in its resposne.
+
+To create the new app:
+
+```bash
+mkdir greeting-service
+cd greeting-service
+npm init
+npm install express node-fetch@2
+cat << EOF > app.js
+const express = require("express");
+const fetch = require("node-fetch");
+
+const app = express();
+const daprPort = process.env.DAPR_HTTP_PORT;
+const invokeHello = `http://localhost:\${daprPort}/v1.0/invoke/hello-service/method/sayHello`;
+const invokeWorld = `http://localhost:\${daprPort}/v1.0/invoke/world-service/method/sayWorld`;
+
+app.get("/greet", async (_, res) => {
+  hello = await fetch(invokeHello);
+  world = await fetch(invokeWorld);
+  const greeting = (await hello.text()) + " " + (await world.text());
+  console.log(\`Sending: \${greeting}\`);
+  res.send(greeting);
+});
+
+const port = 8090;
+app.listen(port, () => console.log(\`Listening on port \${port}\`));
+EOF
+```
+
+To run dapr, run this command:
+
+```bash
+dapr run --app-id greeting-service --app-port 8090 --dapr-http-port 3500 -- node app.js
 ```
