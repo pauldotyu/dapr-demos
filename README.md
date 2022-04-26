@@ -138,3 +138,7 @@ To run dapr, run this command:
 ```bash
 dapr run --app-id greeting-service --app-port 8090 --dapr-http-port 3500 -- node app.js
 ```
+
+### Notes
+
+- `node-fetch` version 3 changes: https://github.com/node-fetch/node-fetch/blob/main/docs/v3-UPGRADE-GUIDE.md
