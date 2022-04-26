@@ -117,8 +117,8 @@ const fetch = require("node-fetch");
 
 const app = express();
 const daprPort = process.env.DAPR_HTTP_PORT;
-const invokeHello = `http://localhost:\${daprPort}/v1.0/invoke/hello-service/method/sayHello`;
-const invokeWorld = `http://localhost:\${daprPort}/v1.0/invoke/world-service/method/sayWorld`;
+const invokeHello = \`http://localhost:\${daprPort}/v1.0/invoke/hello-service/method/sayHello\`;
+const invokeWorld = \`http://localhost:\${daprPort}/v1.0/invoke/world-service/method/sayWorld\`;
 
 app.get("/greet", async (_, res) => {
   hello = await fetch(invokeHello);
