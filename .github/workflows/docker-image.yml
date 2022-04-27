@@ -26,5 +26,5 @@ jobs:
         context: hello-service
         push: true
         tags: |
-          ghcr.io/${{ github.repository }}/hello:${{ github.run_id }}
+          ghcr.io/${{ github.repository }}/hello:${{ github.ref }}
           ghcr.io/${{ github.repository }}/hello:latest
