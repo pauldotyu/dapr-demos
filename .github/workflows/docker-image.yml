@@ -24,18 +24,18 @@ jobs:
           context: hello-service
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/hello:latest
+            ghcr.io/${{ github.repository }}/hello-service:latest
       - name: Build and push world-service
         uses: docker/build-push-action@v2.10.0
         with:
           context: world-service
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/world:latest
+            ghcr.io/${{ github.repository }}/world-service:latest
       - name: Build and push greeting-service
         uses: docker/build-push-action@v2.10.0
         with:
           context: greeting-service
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/greeting:latest
+            ghcr.io/${{ github.repository }}/greeting-service:latest
