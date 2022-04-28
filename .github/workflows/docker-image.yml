@@ -10,9 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Get the tag
-        id: get_tag
-        run: echo ::set-output name=TAG::${GITHUB_REF/refs\/tags\//}
       - name: Checkout
         uses: actions/checkout@v3
       - name: Docker Login
@@ -21,33 +18,30 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.PACKAGE_TOKEN }}
+      - name: Get the tag
+        id: get_tag
+        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
       - name: Build and push hello-service
         uses: docker/build-push-action@v2.10.0
         with:
           context: hello-service
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/hello-service:$TAG
+            ghcr.io/${{ github.repository }}/hello-service:${{ env.TAG }}
             ghcr.io/${{ github.repository }}/hello-service:latest
-        env:
-          TAG: ${{ steps.get_tag.outputs.TAG }}
       - name: Build and push world-service
         uses: docker/build-push-action@v2.10.0
         with:
           context: world-service
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/world-service:$TAG
+            ghcr.io/${{ github.repository }}/world-service:${{ env.TAG }}
             ghcr.io/${{ github.repository }}/world-service:latest
-        env:
-          TAG: ${{ steps.get_tag.outputs.TAG }}
       - name: Build and push greeting-service
         uses: docker/build-push-action@v2.10.0
         with:
           context: greeting-service
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/greeting-service:$TAG
+            ghcr.io/${{ github.repository }}/greeting-service:${{ env.TAG }}
             ghcr.io/${{ github.repository }}/greeting-service:latest
-        env:
-          TAG: ${{ steps.get_tag.outputs.TAG }}
