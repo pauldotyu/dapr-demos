@@ -139,6 +139,56 @@ To run dapr, run this command:
 dapr run --app-id greeting-service --app-port 8090 --dapr-http-port 3500 -- node app.js
 ```
 
+## Dapr on Kubernetes
+
+To run Dapr on Kubernetes, run either of these commands:
+
+```bash
+# install using dapr cli
+dapr init --kubernetes
+dapr status -k
+
+# optionall install using Helm
+helm repo add dapr https://dapr.github.io/helm-charts
+helm repo update
+helm upgrade --install dapr dapr/dapr --version=1.7.2 --namespace dapr-system --create-namespace --set global.ha.enabled=true --wait
+
+# upgrade helm package
+helm upgrade dapr dapr/dapr --version=1.7.2 --namespace dapr-system --wait
+
+# validate
+kubectl get pods -n dapr-system
+```
+
+To uninstall, Dapr from Kubernetes, run either of these commands:
+
+```bash
+dapr uninstall --kubernetes
+helm uninstall dapr --namespace dapr-system
+```
+
+### Deploy workload
+
+```bash
+# deploy manifests
+kubectl apply -f .
+
+# get service info
+kubectl get svc greeting-service
+NAME               TYPE       CLUSTER-IP    EXTERNAL-IP   PORT(S)        AGE
+greeting-service   NodePort   10.43.56.71   <none>        80:32598/TCP   20s
+
+# get the node port and do a curl to it to make sure it is all up and running
+curl http://localhost:30312/greet
+```
+
+### Inspect logs
+
+```bash
+kubectl get po -lapp=greeting
+kubectl logs greeting-deploy-65f5b6d9d6-8r8gr -c daprd
+```
+
 ### Notes
 
 - `node-fetch` version 3 changes: https://github.com/node-fetch/node-fetch/blob/main/docs/v3-UPGRADE-GUIDE.md

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: greeting
+  name: greeting-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: greeting
+  template:
+    metadata:
+      labels:
+        app: greeting
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "greeting-service"
+    spec:
+      containers:
+        - image: ghcr.io/pauldotyu/dapr-demos/greeting-service:latest
+          name: greeting-container
+          resources: {}
+          ports:
+            - containerPort: 8090
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: greeting
+  name: greeting-service
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8090
+  selector:
+    app: greeting
+  type: NodePort

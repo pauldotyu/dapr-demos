@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: hello
+  name: hello-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello
+  template:
+    metadata:
+      labels:
+        app: hello
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "hello-service"
+        dapr.io/app-port: "8088"
+    spec:
+      containers:
+        - image: ghcr.io/pauldotyu/dapr-demos/hello-service:latest
+          name: hello-container
+          resources: {}
+          ports:
+            - containerPort: 8088
