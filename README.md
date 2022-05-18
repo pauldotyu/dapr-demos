@@ -4,9 +4,10 @@ This is my repo for learning and demo'ing dapr
 
 ## Assumptions
 
-- You have NodeJS 14 or higher installed
-- You have Docker Desktop installed
 - You are using a \*nix based OS (i.e., WSL2, Ubuntu, macOS, etc)
+- You have NodeJS 14 or higher installed
+- You have Docker Desktop installed and running
+- You have dapr [installed](https://docs.dapr.io/getting-started/install-dapr-cli/) and [initialized](https://docs.dapr.io/getting-started/install-dapr-selfhost/)
 
 ## Microservices
 
@@ -50,10 +51,22 @@ To run the app, run this command:
 node app.js
 ```
 
-To run dapr, run this command:
+To test the app, run this command in a separate terminal window:
+
+```bash
+curl http://localhost:8088/sayhello
+```
+
+Exit the node app and run it in dapr by using this command:
 
 ```bash
 dapr run --app-id hello-service --app-port 8088 -- node app.js
+```
+
+To test the app, run this command in a separate terminal window and view dapr logs:
+
+```bash
+curl http://localhost:8088/sayhello
 ```
 
 ### world-service
@@ -94,10 +107,22 @@ To run the app, run this command:
 node app.js
 ```
 
-To run dapr, run this command:
+To test the app, run this command in a separate terminal window:
+
+```bash
+curl http://localhost:8089/sayworld
+```
+
+Exit the node app and run it in dapr by using this command:
 
 ```bash
 dapr run --app-id world-service --app-port 8089 -- node app.js
+```
+
+To test the app, run this command in a separate terminal window and view dapr logs:
+
+```bash
+curl http://localhost:8089/sayworld
 ```
 
 ### greeting-service
@@ -139,7 +164,28 @@ To run dapr, run this command:
 dapr run --app-id greeting-service --app-port 8090 --dapr-http-port 3500 -- node app.js
 ```
 
+To test the app, run this command in a separate terminal window and view dapr logs:
+
+```bash
+curl http://localhost:8090/greet
+```
+
 ## Dapr on Kubernetes
+
+Before you run on Kubernetes, you need to build the docker containers and publish to a docker registry. This repository is wired up to [Build and publish Docker Images to GitHub Container Registry](https://github.com/marketplace/actions/build-and-publish-docker-images-to-github-container-registry)
+
+To build the containers locally:
+
+```bash
+cd ../hello-service
+docker build -t hello-service:v0.1.0 .
+
+cd ../world-service
+docker build -t world-service:v0.1.0 .
+
+cd ../greeting-service
+docker build -t greeting-service:v0.1.0 .
+```
 
 To run Dapr on Kubernetes, run either of these commands:
 
@@ -163,8 +209,8 @@ kubectl get pods -n dapr-system
 To uninstall, Dapr from Kubernetes, run either of these commands:
 
 ```bash
-dapr uninstall --kubernetes
-helm uninstall dapr --namespace dapr-system
+dapr uninstall --kubernetes                 # if you installed using dapr cli
+helm uninstall dapr --namespace dapr-system # if you installed using helm
 ```
 
 ### Deploy workload
