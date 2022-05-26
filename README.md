@@ -161,6 +161,8 @@ EOF
 To run dapr, run this command:
 
 ```bash
+# this needs a dapr-http-port because the underlying app needs to call into dapr sidecar to invoke the hello and world service
+# dapr will randomize the port and injects it into an environment variable but I gues this is just to make it more predictable
 dapr run --app-id greeting-service --app-port 8090 --dapr-http-port 3500 -- node app.js
 ```
 
@@ -169,6 +171,10 @@ To test the app, run this command in a separate terminal window and view dapr lo
 ```bash
 curl http://localhost:8090/greet
 ```
+
+Open zipkin and view the distributed trace logs: http://localhost:9411
+
+Run `dapr dashboard` to open the dapr dashboard
 
 ## Dapr on Kubernetes
 
