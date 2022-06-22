@@ -58,3 +58,4 @@ jobs:
           image: hello-service
           folder: hello-service
           tag: ${{ env.TAG }}
+          branch: main
