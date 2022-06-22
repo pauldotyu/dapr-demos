@@ -45,7 +45,7 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}/greeting-service:${{ env.TAG }}
             ghcr.io/${{ github.repository }}/greeting-service:latest
-            
+
       # Build and push to Azure Container Registry
       - name: Build and push hello-service
         uses: Azure/acr-build@v1
@@ -55,5 +55,6 @@ jobs:
           tenant: ${{ secrets.TENANT_ID }}
           registry: containercentral
           repository: hello-service
-          folder: ./hello-service
+          image: hello-service
+          folder: hello-service
           tag: ${{ env.TAG }}
