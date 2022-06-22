@@ -37,7 +37,8 @@ jobs:
           tenant: ${{ secrets.TENANT_ID }}
           registry: containercentral
           repository: hello-service
-          folder: hello-service
+          folder: ./
+          dockerfile: ./hello-service/Dockerfile
           tag: ${{ env.TAG }}
       - name: Build and push world-service to GitHub Container Registry
         uses: docker/build-push-action@v2.10.0
