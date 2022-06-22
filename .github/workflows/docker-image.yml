@@ -21,7 +21,9 @@ jobs:
       - name: Get the tag
         id: get_tag
         run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
-      - name: Build and push hello-service
+
+      # Build and push to GitHub Container Registry
+      - name: Build and push hello-service to ghcr
         uses: docker/build-push-action@v2.10.0
         with:
           context: hello-service
@@ -29,7 +31,7 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}/hello-service:${{ env.TAG }}
             ghcr.io/${{ github.repository }}/hello-service:latest
-      - name: Build and push world-service
+      - name: Build and push world-service to ghcr
         uses: docker/build-push-action@v2.10.0
         with:
           context: world-service
@@ -37,7 +39,7 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}/world-service:${{ env.TAG }}
             ghcr.io/${{ github.repository }}/world-service:latest
-      - name: Build and push greeting-service
+      - name: Build and push greeting-service to ghcr
         uses: docker/build-push-action@v2.10.0
         with:
           context: greeting-service
@@ -47,15 +49,39 @@ jobs:
             ghcr.io/${{ github.repository }}/greeting-service:latest
 
       # Build and push to Azure Container Registry
-      - name: Build and push hello-service
+      - name: Build and push hello-service to acr
         uses: Azure/acr-build@v1
         with:
           service_principal: ${{ secrets.CLIENT_ID }}
           service_principal_password: ${{ secrets.CLIENT_SECRET }}
           tenant: ${{ secrets.TENANT_ID }}
           registry: containercentral
-          repository: hello-service
+          repository: dapr-demos
           image: hello-service
           folder: hello-service
+          tag: ${{ env.TAG }}
+          branch: main
+      - name: Build and push world-service to acr
+        uses: Azure/acr-build@v1
+        with:
+          service_principal: ${{ secrets.CLIENT_ID }}
+          service_principal_password: ${{ secrets.CLIENT_SECRET }}
+          tenant: ${{ secrets.TENANT_ID }}
+          registry: containercentral
+          repository: dapr-demos
+          image: world-service
+          folder: world-service
+          tag: ${{ env.TAG }}
+          branch: main
+      - name: Build and push greeting-service to acr
+        uses: Azure/acr-build@v1
+        with:
+          service_principal: ${{ secrets.CLIENT_ID }}
+          service_principal_password: ${{ secrets.CLIENT_SECRET }}
+          tenant: ${{ secrets.TENANT_ID }}
+          registry: containercentral
+          repository: dapr-demos
+          image: greeting-service
+          folder: greeting-service
           tag: ${{ env.TAG }}
           branch: main
